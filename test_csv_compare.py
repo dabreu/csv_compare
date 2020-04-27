@@ -1,7 +1,7 @@
 from io import StringIO
 import pytest
 
-from csv_field_compare import load_rows, join_files, comparison_results_as_csv, BadColumnException
+from csv_compare import load_rows, join_files, comparison_results_as_csv, BadColumnException
 
 
 def test_load_empty_rows():
