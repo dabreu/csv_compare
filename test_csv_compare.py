@@ -30,15 +30,32 @@ def _load_with_delimiter(delimiter):
     assert rows["e"] == "g"
 
 
-def test_join_files():
-    csv_file1 = iter(["a,b,c", "b,c,d", "e,f,g"])
-    csv_file2 = iter(["a,n,x", "e,m,f"])
+def test_compare_joined_files():
+    csv_file1 = iter(["a,b,c", "b,c,d", "e,f,g", "x,y,z", "v,w,x"])
+    csv_file2 = iter(["e,m,f", "b,u,d", "a,n,x", "x,y,z"])
     key_column = 1
     comparable_column = 3
-    rows = list(CsvCompare().join_files(csv_file1, csv_file2, key_column, comparable_column))
+    rows = list(CsvCompare().compare_joined_files(
+        csv_file1, csv_file2, key_column, comparable_column))
     assert len(rows) == 2
-    assert rows[0] == ("a", "c", "x")
-    assert rows[1] == ("e", "g", "f")
+    assert rows[0] == ("e", "g", "f")
+    assert rows[1] == ("a", "c", "x")
+
+
+def test_compare_with_unmatches():
+    csv_file1 = iter(["a,b,c", "b,c,d", "e,f,g", "x,y,z", "v,w,x"])
+    csv_file2 = iter(["e,m,f", "b,u,d", "a,n,x", "w,y,z"])
+    key_column = 1
+    comparable_column = 3
+    rows = list(CsvCompare(get_mismatches=True).compare_joined_files(
+                    csv_file1, csv_file2, key_column, comparable_column))
+    assert len(rows) == 5
+    assert rows[0] == ("e", "g", "f")
+    assert rows[1] == ("a", "c", "x")
+    assert rows[2] == ("w", "notFoundInFile1", "z")
+    not_found_in_f2 = set(rows[3:])
+    assert ("x", "z", "notFoundInFile2") in not_found_in_f2
+    assert ("v", "x", "notFoundInFile2") in not_found_in_f2
 
 
 def test_compare_files():

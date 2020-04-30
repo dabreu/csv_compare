@@ -30,3 +30,10 @@ And you want to check which records have different values in the third column. Y
     c,c4,c3
 
   
+## Additional options
+
+
+    -d DELIMITER, --delimiter DELIMITER
+                          field delimiter (default: ',')
+    -m GET_MISMATCHES, --get_mismatches GET_MISMATCHES
+                          print not matching keys

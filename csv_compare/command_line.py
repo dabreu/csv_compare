@@ -11,13 +11,17 @@ def _get_arguments():
     parser.add_argument('comparable_column', help="The index of the column to compare", type=int)
     parser.add_argument(
             '-d', '--delimiter', default=',', help="field delimiter (default: ',')", type=str)
+    parser.add_argument(
+            '-m', '--get_mismatches', help="print not matching keys", action='store_true')
     return parser.parse_args()
 
 
 def main():
     args = _get_arguments()
-    csv_compare.CsvCompare(delimiter=args.delimiter).comparison_results_as_csv(
-            sys.stdout, args.file1, args.file2, args.key_column, args.comparable_column)
+    csv_compare.CsvCompare(
+            delimiter=args.delimiter,
+            get_mismatches=args.get_mismatches).comparison_results_as_csv(
+                    sys.stdout, args.file1, args.file2, args.key_column, args.comparable_column)
 
 
 if __name__ == "__main__":
